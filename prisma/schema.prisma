@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // Change to "postgresql" if using PostgreSQL
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     String @default("EMPLOYEE") // ADMIN, IT-STAFF, EMPLOYEE
+
+  // Add relations
+  assets  Asset[] // A user can have multiple assets
+  tickets Ticket[] // A user can be assigned multiple tickets
+}
+
+model Asset {
+  id           Int    @id @default(autoincrement())
+  name         String
+  serialNo     String @unique
+  assignedTo   User?  @relation(fields: [assignedToId], references: [id])
+  assignedToId Int?
+  status       String
+}
+
+model Ticket {
+  id           Int      @id @default(autoincrement())
+  issue        String
+  description  String
+  status       String   @default("Open")
+  priority     String
+  assignedTo   User?    @relation(fields: [assignedToId], references: [id])
+  assignedToId Int?
+  createdAt    DateTime @default(now())
+}

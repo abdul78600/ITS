@@ -1,0 +1,1 @@
+// Full content of AssetDetails.tsx was provided in the file changes
